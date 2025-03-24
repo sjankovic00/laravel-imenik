@@ -12,4 +12,10 @@ class Member extends Model
     protected $fillable = [
         'name', 'surname', 'phone_number', 'address', 'email', 'description', 'website',
     ];
+
+    public function images()
+    {
+        return $this->belongsToMany(Image::class, 'user_images', 'user_id', 'image_id')
+            ->withTimestamps();
+    }
 }
