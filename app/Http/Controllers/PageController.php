@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Member;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
@@ -58,5 +61,46 @@ class PageController extends Controller
         ]);
 
         return redirect()->route('index')->with('success', 'Member added successfully!');
+    }
+
+    public function uploadImage(Request $request, $id)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $member = Member::findOrFail($id);
+
+        $file = $request->file('image');
+        $fileName = time() . '-' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $filePath = $file->storeAs('images', $fileName, 'public');
+
+        $image = Image::create([
+            'filepath' => $fileName
+        ]);
+
+        $member->images()->attach($image->id);
+
+        return response()->json([
+            'success' => 'Image uploaded successfully!',
+            'filepath' => $fileName,
+            'image_id' => $image->id
+        ]);
+    }
+
+    public function deleteImage($id)
+    {
+        $image = Image::findOrFail($id);
+
+        $filePath = $image->filepath;
+        if (!str_starts_with($filePath, 'images/')) {
+            $filePath = 'images/' . $filePath;
+        }
+        Storage::disk('public')->delete($filePath);
+        $image->delete();
+
+        return response()->json([
+            'success' => 'Slika je uspešno obrisana!',
+        ]);
     }
 }

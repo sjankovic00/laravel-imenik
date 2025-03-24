@@ -10,33 +10,31 @@ class AddEditController extends Controller
     public function edit($id)
     {
         $member = Member::findOrFail($id);
-        return response()->json([
-            'success' => true,
-            'data' => $member
-        ]);
+        return response()->json($member);
     }
 
     public function update(Request $request, $id)
     {
         $member = Member::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required|string',
-            'surname' => 'nullable|string',
-            'phone_number' => 'nullable|string',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:15',
             'address' => 'nullable|string',
             'email' => 'nullable|email',
             'description' => 'nullable|string',
-            'website' => 'nullable|string'
+            'website' => 'nullable|url',
         ]);
 
-        $member->update($request->only(['name', 'surname', 'phone_number', 'address', 'email', 'description', 'website']));
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data updated successfully!'
-        ]);
+        try {
+            $member->update($validated);
+            return response()->json(['message' => 'Member updated successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
     }
+
 
     public function destroy($id)
     {
