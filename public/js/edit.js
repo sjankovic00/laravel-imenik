@@ -82,7 +82,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: `/member/${memberId}/upload-image`,
+            url: `/member/${memberId}/`,
             type: 'POST',
             data: formData,
             contentType: false,
@@ -114,7 +114,7 @@ $(document).ready(function () {
             },
             error: function (xhr) {
                 console.log("Greška:", xhr.responseText);
-                $('#message').html('<p style="color: red;">Error: ' + xhr.responseText + '</p>');
+                $('#message').html('<p style="color: red;">Error!</p>');
             }
         });
     });
@@ -141,7 +141,7 @@ $(document).ready(function () {
                     }, 3000);
                 },
                 error: function (xhr) {
-                    $('#message').html('<p style="color: red;">Error: ' + xhr.responseText + '</p>');
+                    $('#message').html('<p style="color: red;">Error!</p>');
                 }
             });
         }

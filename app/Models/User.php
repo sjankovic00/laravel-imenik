@@ -21,10 +21,6 @@ class User extends Authenticatable
         'role',
     ];
 
-    public function images()
-    {
-        return $this->belongsToMany(Image::class, 'user_images', 'user_id', 'image_id')->withTimestamps();
-    }
 
     protected function casts(): array
     {

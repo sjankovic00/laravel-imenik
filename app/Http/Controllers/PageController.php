@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Image;
 use App\Models\Member;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $members = Member::paginate(5);
+        $members = Member::paginate($request->get('pear_page',5));
         return view('index', compact('members'));
     }
 
@@ -100,7 +99,7 @@ class PageController extends Controller
         $image->delete();
 
         return response()->json([
-            'success' => 'Slika je uspešno obrisana!',
+            'success' => 'Image was deleted successfully!',
         ]);
     }
 }
