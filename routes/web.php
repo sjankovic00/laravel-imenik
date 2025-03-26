@@ -17,7 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit/{id}', [AddEditController::class, 'edit'])->name('edit');
     Route::put('/update/{id}', [AddEditController::class, 'update'])->name('update');
     Route::delete('/delete/{id}', [AddEditController::class, 'destroy'])->name('delete');
-    Route::post('/member/{id}/upload-image', [PageController::class, 'uploadImage'])->name('member.upload-image');
+    Route::post('/member/{id}', [PageController::class, 'uploadImage'])->name('upload-image');
     Route::delete('/image/{id}', [PageController::class, 'deleteImage'])->name('image.delete');
 });
 
