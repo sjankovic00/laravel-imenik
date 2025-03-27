@@ -3,7 +3,7 @@
         <x-member-details :member="$member"/>
 
         @if(auth()->user()->role == 'admin')
-            <form id="upload-image-form" enctype="multipart/form-data" data-member-id="{{ $member->id }}" class="mt-4">
+            <form id="upload-image-form" method="POST" enctype="multipart/form-data" data-member-id="{{ $member->id }}" class="mt-4">
                 @csrf
                 <input type="file" name="image" id="image" accept="image/*">
                 <button type="submit" class="btn btn-primary">Upload Image</button>
