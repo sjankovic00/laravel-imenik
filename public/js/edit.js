@@ -68,27 +68,22 @@ $(document).on('click', '.delete-btn', function () {
 });
 
 $(document).ready(function () {
-    // Upload slike
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    console.log("CSRF Token:", csrfToken);
+
     $('#upload-image-form').on('submit', function (e) {
         e.preventDefault();
-
         let formData = new FormData(this);
-
         let memberId = $(this).data('member-id');
 
-        if (!memberId) {
-            $('#message').html('<p style="color: red;">Error.</p>');
-            return;
-        }
-
         $.ajax({
-            url: `/member/${memberId}/`,
+            url: `/member/${memberId}`,
             type: 'POST',
             data: formData,
             contentType: false,
             processData: false,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'X-CSRF-TOKEN': csrfToken
             },
             success: function (response) {
                 console.log("Uspeh:", response);
@@ -113,11 +108,12 @@ $(document).ready(function () {
                 }, 3000);
             },
             error: function (xhr) {
-                console.log("Greška:", xhr.responseText);
-                $('#message').html('<p style="color: red;">Error!</p>');
+                console.log("Greška:", xhr.status, xhr.responseText);
+                $('#message').html('<p style="color: red;">Error: ' + xhr.status + ' - ' + xhr.responseText + '</p>');
             }
         });
     });
+});
 
     $(document).on('click', '.delete-image', function () {
         var imageId = $(this).data('image-id');
@@ -146,4 +142,4 @@ $(document).ready(function () {
             });
         }
     });
-});
+
